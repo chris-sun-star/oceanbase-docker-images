@@ -87,6 +87,9 @@ function fastboot() {
 function boot() {
     # generate config based on variables
     envsubst < templates/observer-template.yaml > /tmp/config.yaml
+    if ! [ -z "${OB_CONFIGSERVER_ADDRESS}" ]; then
+      echo "    obconfig_url: 'http://${OB_CONFIGSERVER_ADDRESS}/services?Action=ObRootServiceInfo&ObCluster=${OB_CLUSTER_NAME}'" >> /tmp/config.yaml
+    fi;
     obd cluster deploy obcluster -c /tmp/config.yaml
     if [ $? -ne 0 ]; then
       deploy_failed
