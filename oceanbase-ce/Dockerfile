@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM openanolis/anolisos as builder
+FROM --platform=$BUILDPLATFORM openanolis/anolisos:8.8 as builder
 
 ARG VERSION
 
@@ -9,12 +9,11 @@ RUN mkdir -p pkgs
 
 RUN yum install -y yum-utils && \
     yum-config-manager --add-repo http://mirrors.oceanbase.com/oceanbase/OceanBase.repo && \
-    sed -i 's/$releasever/7/' /etc/yum.repos.d/OceanBase.repo && \
     yum install -y ob-deploy && \
     yum clean all
 
 # download and clone all the required packages
-RUN yum install -y --downloadonly --downloaddir=/root/pkgs oceanbase-ce-${VERSION}.el7 oceanbase-ce-libs-${VERSION}.el7 obagent ob-configserver
+RUN yum install -y --downloadonly --downloaddir=/root/pkgs oceanbase-ce-${VERSION}.el8 oceanbase-ce-libs-${VERSION}.el8
 RUN obd mirror clone /root/pkgs/*.rpm
 RUN obd env set IO_DEFAULT_CONFIRM 1
 RUN obd mirror disable remote
@@ -27,12 +26,11 @@ RUN cd /root/demo && tar -cvzf store.tar.gz store
 RUN rm -rf /root/demo/store && rm -rf /root/demo/log/* && rm -rf /root/demo/log_obshell/* && rm -rf /root/demo/etc/*.py && rm -rf /root/demo/etc/obshell && rm -rf /root/demo/etc/*.sql && rm -rf /root/demo/etc/*.log && rm -rf /root/demo/run/*
 RUN cd /root/.obd && rm -rf log/obd && tar -cvzf repository.tar.gz repository && rm -rf /root/.obd/repository && rm -rf /root/.obd/mirror/local/*
 
-FROM --platform=$BUILDPLATFORM openanolis/anolisos
+FROM --platform=$BUILDPLATFORM openanolis/anolisos:8.8
 
 WORKDIR /root
 RUN yum install -y yum-utils && \
     yum-config-manager --add-repo http://mirrors.oceanbase.com/oceanbase/OceanBase.repo && \
-    sed -i 's/$releasever/7/' /etc/yum.repos.d/OceanBase.repo && \
     yum install -y ob-deploy obclient ob-sysbench gettext ncurses-compat-libs openssh-server && \
     yum clean all
 
