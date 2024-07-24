@@ -1,4 +1,4 @@
-FROM oceanbase/oceanbase-helper
+FROM oceanbasedev/oceanbase-helper
 
 ARG VERSION
 ARG TARGETPLATFORM
