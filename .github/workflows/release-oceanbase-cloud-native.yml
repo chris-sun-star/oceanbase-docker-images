@@ -3,6 +3,7 @@ name: release oceanbase-cloud-native
 on:
   push:
     tags:
+      - "cloud-oceanbase-*"
       - "oceanbase-*"
       - "lts-oceanbase-*"
 
@@ -44,7 +45,11 @@ jobs:
 
       - name: Set Version variables
         id: set_version_vars
-        run: echo "version=$(echo $tagName | grep -P '(\d*\.\d*\.\d*\.\d*-\d{18})' --only-matching)" >> $GITHUB_OUTPUT
+        run: echo "version=$(echo $tagName | grep -P '(\d*\.\d*\.\d*\.\d*)' --only-matching)" >> $GITHUB_OUTPUT
+
+      - name: Set Release variables
+        id: set_release_vars
+        run: echo "release=$(echo $tagName | grep -P '(\d{18})' --only-matching)" >> $GITHUB_OUTPUT
 
       - name: Build and push observer w/o cache
         uses: docker/build-push-action@v6
@@ -59,3 +64,4 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/oceanbase-cloud-native:${{ steps.set_version_vars.outputs.version }}
           build-args: |
             VERSION=${{ steps.set_version_vars.outputs.version }}
+            RELEASE=${{ steps.set_release_vars.outputs.release }}
