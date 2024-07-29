@@ -59,9 +59,9 @@ jobs:
           file: ./oceanbase-cloud-native/Dockerfile
           push: true
           tags: |
-            ${{ vars.DOCKER_PUSH_BASE }}/oceanbase-cloud-native:${{ steps.set_version_vars.outputs.version }}
-            quay.io/${{ vars.QUAY_IO_PUSH_BASE }}/oceanbase-cloud-native:${{ steps.set_version_vars.outputs.version }}
-            ghcr.io/${{ github.repository_owner }}/oceanbase-cloud-native:${{ steps.set_version_vars.outputs.version }}
+            ${{ vars.DOCKER_PUSH_BASE }}/oceanbase-cloud-native:${{ steps.set_version_vars.outputs.version }}-${{ steps.set_release_vars.outputs.release }}
+            quay.io/${{ vars.QUAY_IO_PUSH_BASE }}/oceanbase-cloud-native:${{ steps.set_version_vars.outputs.version }}-${{ steps.set_release_vars.outputs.release }}
+            ghcr.io/${{ github.repository_owner }}/oceanbase-cloud-native:${{ steps.set_version_vars.outputs.version }}-${{ steps.set_release_vars.outputs.release }}
           build-args: |
             VERSION=${{ steps.set_version_vars.outputs.version }}
             RELEASE=${{ steps.set_release_vars.outputs.release }}
