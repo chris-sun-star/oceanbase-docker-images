@@ -17,9 +17,13 @@ RUN yum install -y yum-utils && \
 
 # download and clone all the required packages
 RUN yum install -y --downloadonly --downloaddir=/root/pkgs oceanbase-ce-${VERSION}.el7 oceanbase-ce-libs-${VERSION}.el7 ob-configserver
+RUN cd /root/pkgs/ && rpm2cpio ob-configserver*.rpm | cpio -id
+RUN ldd /root/pkgs/home/admin/ob-configserver/bin/ob-configserver
+RUN cd /root/pkgs/ && rpm2cpio ob-configserver*.rpm | cpio -id
 RUN obd mirror clone /root/pkgs/*.rpm 
 RUN obd env set IO_DEFAULT_CONFIRM 1
 RUN obd mirror disable remote
+RUN sed -i "/client.execute_command('ldd %s' % remote_file_path)/a   \ \ \ \ \ \ \  \ \ \ \ \ \ \ \ \ \ \ \ print(ret.stdout,ret.stderr)" /root/.obd/plugins/general/0.1/install_repo.py
 RUN obd cluster deploy demo -c build/deploy.yaml
 RUN obd cluster destroy -f demo
 
