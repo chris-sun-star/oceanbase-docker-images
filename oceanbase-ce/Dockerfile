@@ -17,8 +17,8 @@ RUN yum install -y yum-utils && \
 
 # download and clone all the required packages
 RUN yum install -y --downloadonly --downloaddir=/root/pkgs oceanbase-ce-${VERSION}.el7 oceanbase-ce-libs-${VERSION}.el7 ob-configserver
-RUN cd /root/pkgs/ && rpm2cpio ob-configserver*.rpm | cpio -id
-RUN ldd /root/pkgs/home/admin/ob-configserver/bin/ob-configserver
+# RUN cd /root/pkgs/ && rpm2cpio ob-configserver*.rpm | cpio -id
+# RUN ldd /root/pkgs/home/admin/ob-configserver/bin/ob-configserver 2>&1
 RUN cd /root/pkgs/ && rpm2cpio ob-configserver*.rpm | cpio -id
 RUN obd mirror clone /root/pkgs/*.rpm 
 RUN obd env set IO_DEFAULT_CONFIRM 1
