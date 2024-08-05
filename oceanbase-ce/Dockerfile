@@ -4,6 +4,8 @@ ARG VERSION
 
 WORKDIR /root
 
+RUN ldd /usr/bin/curl
+RUN echo "ldd success"
 COPY build /root/build
 RUN mkdir -p pkgs
 
@@ -15,7 +17,7 @@ RUN yum install -y yum-utils && \
 
 # download and clone all the required packages
 RUN yum install -y --downloadonly --downloaddir=/root/pkgs oceanbase-ce-${VERSION}.el7 oceanbase-ce-libs-${VERSION}.el7 ob-configserver
-RUN obd mirror clone /root/pkgs/*.rpm
+RUN obd mirror clone /root/pkgs/*.rpm 
 RUN obd env set IO_DEFAULT_CONFIRM 1
 RUN obd mirror disable remote
 RUN obd cluster deploy demo -c build/deploy.yaml
