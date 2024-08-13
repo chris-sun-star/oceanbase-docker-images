@@ -11,12 +11,11 @@ RUN echo $TARGETPLATFORM
 
 RUN yum install -y yum-utils && \
     yum-config-manager --add-repo http://mirrors.oceanbase.com/oceanbase/OceanBase.repo && \
-    sed -i 's/$releasever/7/' /etc/yum.repos.d/OceanBase.repo && \
     yum install -y ob-deploy && \
     yum clean all
 
 # download and clone all the required packages
-RUN yum install -y --downloadonly --downloaddir=/root/pkgs oceanbase-ce-${VERSION}.el7 oceanbase-ce-libs-${VERSION}.el7
+RUN yum install -y --downloadonly --downloaddir=/root/pkgs oceanbase-ce-${VERSION}.el8 oceanbase-ce-libs-${VERSION}.el8
 RUN obd mirror clone /root/pkgs/*.rpm
 RUN obd env set IO_DEFAULT_CONFIRM 1
 RUN obd mirror disable remote
@@ -32,7 +31,6 @@ FROM openanolis/anolisos
 WORKDIR /root
 RUN yum install -y yum-utils && \
     yum-config-manager --add-repo http://mirrors.oceanbase.com/oceanbase/OceanBase.repo && \
-    sed -i 's/$releasever/7/' /etc/yum.repos.d/OceanBase.repo && \
     yum install -y ob-deploy obclient ob-sysbench gettext ncurses-compat-libs openssh-server && \
     yum clean all
 
