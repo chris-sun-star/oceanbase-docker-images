@@ -1,10 +1,13 @@
 FROM openanolis/anolisos AS builder
 
 ARG VERSION
+ARG TARGETPLATFORM
 
 WORKDIR /root
 
 RUN mkdir -p pkgs
+
+RUN echo $TARGETPLATFORM
 
 RUN yum install -y yum-utils && \
     yum-config-manager --add-repo http://mirrors.oceanbase.com/oceanbase/OceanBase.repo && \
