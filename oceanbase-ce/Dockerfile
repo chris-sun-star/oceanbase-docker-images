@@ -18,7 +18,7 @@ RUN obd mirror clone /root/pkgs/*.rpm
 RUN obd env set IO_DEFAULT_CONFIRM 1
 RUN obd mirror disable remote
 
-RUN obd demo -c oceanbase-ce --oceanbase-ce.home_path=/root/demo --oceanbase-ce.appname=obcluster --oceanbase-ce.scenario=express_oltp --oceanbase-ce.datafile_size=256M --oceanbase-ce.log_disk_size=5G && sleep 30 && obd cluster tenant create demo -n test -o express_oltp 
+RUN obd demo -c oceanbase-ce --oceanbase-ce.home_path=/root/demo --oceanbase-ce.appname=obcluster --oceanbase-ce.scenario=express_oltp --oceanbase-ce.datafile_size=256M --oceanbase-ce.datafile_next=256M --oceanbase-ce.datafile_maxsize=5G --oceanbase-ce.log_disk_size=5G && sleep 30 && obd cluster tenant create demo -n test -o express_oltp 
 RUN obd cluster stop demo
 RUN cd /root/demo && tar -cvzf store.tar.gz store
 RUN rm -rf /root/demo/store && rm -rf /root/demo/log/* && rm -rf /root/demo/log_obshell/* && rm -rf /root/demo/etc/*.py && rm -rf /root/demo/etc/obshell && rm -rf /root/demo/etc/*.sql && rm -rf /root/demo/etc/*.log && rm -rf /root/demo/run/*
