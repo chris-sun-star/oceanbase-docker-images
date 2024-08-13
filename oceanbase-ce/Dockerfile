@@ -4,7 +4,6 @@ ARG VERSION
 
 WORKDIR /root
 
-COPY build /root/build
 RUN mkdir -p pkgs
 
 RUN yum install -y yum-utils && \
