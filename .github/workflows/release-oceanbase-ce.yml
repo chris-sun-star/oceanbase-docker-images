@@ -15,9 +15,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Set Version variables
         id: set_version_vars
         run: echo "version=$(echo $tagName | grep -P '(\d*\.\d*\.\d*\.\d*-\d{18})' --only-matching)" >> $GITHUB_OUTPUT
@@ -62,9 +59,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
 
       - name: Set Version variables
         id: set_version_vars
