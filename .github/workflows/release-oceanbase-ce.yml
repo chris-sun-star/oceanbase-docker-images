@@ -57,6 +57,13 @@ jobs:
   build-arm64:
     runs-on: macos-latest
     steps:
+      - name: Install Docker
+        run: |
+          brew install --cask docker
+          open /Applications/Docker.app
+          # Wait until Docker is running
+          while ! docker info > /dev/null 2>&1; do sleep 1; done
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
