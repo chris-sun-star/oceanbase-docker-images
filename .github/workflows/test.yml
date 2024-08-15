@@ -1,0 +1,22 @@
+name: release oceanbase-ce
+
+on:
+  push:
+    tags:
+      - "test-*"
+
+env:
+  tagName: ${{ github.ref_name }}
+
+jobs:
+  test-macos:
+    runs-on: macos-latest
+    steps:
+      - name: check-arck
+        run: uname -a
+
+  test-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check-arck
+        run: uname -a
