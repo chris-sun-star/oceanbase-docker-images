@@ -9,7 +9,7 @@ env:
   tagName: ${{ github.ref_name }}
 
 jobs:
-  build-amd64:
+  release-oceanbase-ce:
     runs-on: ubuntu-latest
     steps:
       - name: Free disk space on Ubuntu runner
