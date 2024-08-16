@@ -93,7 +93,7 @@ function check_tenant_connectable() {
 }
 
 function fastboot() {
-	cd /root/demo/ && tar -xvzf store.tar.gz
+	cd /root/demo/ && tar -xvzf store.tar.gz && tar -xvzf etc.tar.gz
 	obd cluster start demo
 }
 

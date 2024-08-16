@@ -1,10 +1,12 @@
-FROM --platform=$BUILDPLATFORM openanolis/anolisos AS builder
+FROM openanolis/anolisos AS builder
 
 ARG VERSION
 
 WORKDIR /root
 
 RUN mkdir -p pkgs
+
+ADD build/demo.yaml /root/
 
 RUN yum install -y yum-utils && \
     yum-config-manager --add-repo http://mirrors.oceanbase.com/oceanbase/OceanBase.repo && \
@@ -16,12 +18,10 @@ RUN yum install -y --downloadonly --downloaddir=/root/pkgs oceanbase-ce-${VERSIO
 RUN obd mirror clone /root/pkgs/*.rpm
 RUN obd env set IO_DEFAULT_CONFIRM 1
 RUN obd mirror disable remote
+RUN obd cluster deploy demo -c /root/demo.yaml
 
-RUN obd demo -c oceanbase-ce --oceanbase-ce.home_path=/root/demo --oceanbase-ce.appname=obcluster --oceanbase-ce.scenario=express_oltp --oceanbase-ce.datafile_size=256M --oceanbase-ce.datafile_next=256M --oceanbase-ce.datafile_maxsize=3G --oceanbase-ce.log_disk_size=5G -v && obd cluster tenant create demo -n test -o express_oltp  -v
-RUN obd cluster stop demo
-RUN cd /root/demo && tar -cvzf store.tar.gz store
-RUN rm -rf /root/demo/store && rm -rf /root/demo/log/* && rm -rf /root/demo/log_obshell/* && rm -rf /root/demo/etc/*.py && rm -rf /root/demo/etc/obshell && rm -rf /root/demo/etc/*.sql && rm -rf /root/demo/etc/*.log && rm -rf /root/demo/run/*
-RUN cd /root/.obd && rm -rf log/obd && tar -cvzf repository.tar.gz repository && rm -rf /root/.obd/repository && rm -rf /root/.obd/mirror/local/*
+RUN rm -rf /root/demo/store && rm -rf /root/demo/etc
+RUN cd /root/.obd && rm -rf log/obd && tar -cvzf repository.tar.gz repository && rm -rf /root/.obd/repository && rm -rf /root/.obd/mirror/local/* && rm -rf /root/.obd/cluster
 
 FROM openanolis/anolisos
 
@@ -42,9 +42,11 @@ RUN ssh-keygen -t rsa -f /root/.ssh/id_rsa -N ''
 RUN cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
 
 COPY --from=builder /root/demo /root/demo
-COPY --from=builder /root/demo/store.tar.gz /root/demo
 COPY --from=builder /root/.obd /root/.obd
 COPY boot /root/boot
 COPY templates /root/templates
+COPY share/cluster /root/.obd/cluster
+COPY share/store.tar.gz /root/demo/
+COPY share/etc.tar.gz /root/demo/
 
 ENTRYPOINT ["bash", "-c", "/usr/sbin/sshd && /root/boot/start.sh"]
