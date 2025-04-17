@@ -37,7 +37,7 @@ while IFS='=' read -r key value; do
     if [[ $key == ODP_* ]]; then
         # Remove the prefix "ODP_" from the key and transform to lower case
         key=$(echo $key | sed 's/^ODP_//g' | tr '[:upper:]' '[:lower:]')
-        opts=$(concat_opts $opts "$(printf "%s=\"%s\"" "$key" "$value")")
+        opts=$(concat_opts $opts "$(printf "%s=%s" "$key" "$value")")
     fi
 done < <(env)
 
@@ -45,10 +45,10 @@ echo "$opts"
 
 if [ ! -z $CONFIG_URL ]; then
     echo "use config server"
-    cd /home/admin/obproxy && /home/admin/obproxy/bin/obproxy -p 2883 -l 2884 -n ${APP_NAME} -o observer_sys_password=${PROXYRO_PASSWORD_HASH},obproxy_config_server_url="${CONFIG_URL}",$opts --nodaemon
+    cd /home/admin/obproxy && /home/admin/obproxy/bin/obproxy -p 2883 -l 2884 -s 2885 -n ${APP_NAME} -o observer_sys_password=${PROXYRO_PASSWORD_HASH},obproxy_config_server_url="${CONFIG_URL}",$opts --nodaemon
 elif [ ! -z $RS_LIST ]; then
     echo "use rslist"
-    cd /home/admin/obproxy && /home/admin/obproxy/bin/obproxy -p 2883 -l 2884 -n ${APP_NAME} -c ${OB_CLUSTER} -r "${RS_LIST}" -o observer_sys_password=${PROXYRO_PASSWORD_HASH},$opts --nodaemon
+    cd /home/admin/obproxy && /home/admin/obproxy/bin/obproxy -p 2883 -l 2884 -s 2885 -n ${APP_NAME} -c ${OB_CLUSTER} -r "${RS_LIST}" -o observer_sys_password=${PROXYRO_PASSWORD_HASH},$opts --nodaemon
 else 
     echo "no config server or rs list"
     exit 1
